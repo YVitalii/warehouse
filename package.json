@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "SET PORT=3033 && supervisor --no-restart-on error --ignore ./test --program ./bin/www",
+    "test": "mocha --recursive --colors -w --watch-list ['./*'] --node"
   },
   "dependencies": {
     "colors": "^1.4.0",
@@ -15,5 +16,12 @@
     "mongoose": "^6.2.9",
     "morgan": "~1.9.0",
     "pug": "2.0.0-beta11"
+  },
+  "devDependencies": {
+    "chai": "^4.3.6",
+    "chai-http": "^4.3.0",
+    "mocha": "^9.2.2",
+    "nodemon": "^2.0.15",
+    "supertest": "^6.2.2"
   }
 }

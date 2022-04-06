@@ -1,5 +1,5 @@
 // ------------ логгер  --------------------
-const log = require("../../tools/log.js"); // логер
+const log = require("../../../tools/log.js"); // логер
 let logName = "<" + __filename.replace(__dirname, "").slice(1) + ">:";
 let gTrace = 0; //=1 глобальная трассировка (трассируется все)
 // ----------- настройки логгера локальные --------------
@@ -18,8 +18,8 @@ let errLogFile = "./import_err.csv";
 //let separator = "\t";
 
 // -- db -----
-let connStr = require("../../config/db_Config").connectionString;
-const Item = require("./itemShema.js");
+let connStr = require("../../../config/db_config").testBaseConnectionString;
+const Item = require("../itemModel.js");
 const mongoose = require("mongoose");
 let conn, errLogFH;
 

@@ -32,6 +32,7 @@ router.get("/", function (req, res, next) {
 });
 router.get("/getByName", function (req, res) {
   log("i", "GET /getByName");
+  log("w", "req.query=", req.query);
   item.getByName(req, res);
   //res.send("GET /byName");
 });

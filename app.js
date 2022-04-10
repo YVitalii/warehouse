@@ -34,6 +34,9 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/items", itemRouter);
+app.get("/searchBar", (req, res) => {
+  res.render("searchBar");
+});
 //app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler

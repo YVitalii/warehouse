@@ -1,0 +1,17 @@
+extends layout
+
+block content
+    h5 Test search bar
+    
+    //- form 
+    //-     div(class="ui-widget")
+    //-         label(for="searchField") Пошук:
+    //-         input#searchField
+    form 
+        div()
+            label(for="searchField" class="form-label") Пошук:
+            input#searchField.form-control(list="searchList" placeholder="Друкуйте тут...")
+            datalist#searchList
+                option(value="Пока пусто")
+    script(src="/js/searchBar.js")
+

@@ -38,7 +38,7 @@ let conn, errLogFH;
 
   try {
     trace ? log("i", logN, "connStr", connStr) : null;
-    conn = await mongoose.connect(connStr);
+    //conn = await mongoose.connect(connStr);
     console.log("Connection established");
     //errLogFH.write("Connection established \n");
   } catch (error) {
@@ -46,7 +46,7 @@ let conn, errLogFH;
     console.dir(error);
     handleError(error);
   }
-
+  let i = 0;
   fs.createReadStream(inputFileName)
     .pipe(
       csv({
@@ -56,14 +56,33 @@ let conn, errLogFH;
       })
     )
     .on("data", async function (data) {
-      data.name;
+      let ln = `on-data(${i})::`;
+      trace = i < 10;
+      trace < 10 ? log("i", ln, "file=", data) : null;
       data.techToAcc = parseFloat(data.techToAcc.replace(",", "."));
-      data.weightTech = parseFloat(data.weightTech.replace(",", "."));
+      data.price = parseFloat(data.price.replace(",", "."));
+      if (!data.price) {
+        data.price = 0;
+      }
+      if (data.techUnits == "кг") {
+        data.weightTech = parseFloat(data.techUnits.replace(",", "."));
+      } else {
+        if (data.accUnits == "кг") {
+          data.weightTech =
+            parseFloat(data.techUnits.replace(",", ".")) * data.techToAcc;
+        } else {
+          data.weightTech = 0;
+        }
+      }
+
+      //data.weightTech = parseFloat(data.weightTech.replace(",", "."));
       //errLogFH.write(JSON.stringify(data) + "\n");
-      trace ? log("i", "file=", data) : null;
+
       let item = new Item(data);
+      i++;
       try {
-        await item.save();
+        // await item.save();
+        trace ? console.dir(item) : null;
       } catch (error) {
         let errMsg = "data=" + JSON.stringify(data) + "\t" + error.message;
         log("e", errMsg);

@@ -1,9 +1,1 @@
-Start : 2022-04-06T07:17:16.037Z
-data={"name":"кутн 25х25х3; Ст","techUnits":"м","accUnits":"кг","techToAcc":1.29,"weightTech":1.29}	E11000 duplicate key error collection: test_warehouse.itemnames index: name_1 dup key: { name: "кутн 25х25х3; ст" }
-data={"name":"кутн 25х25х4; Ст","techUnits":"м","accUnits":"кг","techToAcc":1.53,"weightTech":1.53}	E11000 duplicate key error collection: test_warehouse.itemnames index: name_1 dup key: { name: "кутн 25х25х4; ст" }
-data={"name":"кутн 40х40х3; Ст","techUnits":"м","accUnits":"кг","techToAcc":2.05,"weightTech":2.05}	E11000 duplicate key error collection: test_warehouse.itemnames index: name_1 dup key: { name: "кутн 40х40х3; ст" }
-data={"name":"кутн 40х40х4; Ст","techUnits":"м","accUnits":"кг","techToAcc":2.6,"weightTech":2.6}	E11000 duplicate key error collection: test_warehouse.itemnames index: name_1 dup key: { name: "кутн 40х40х4; ст" }
-data={"name":"кутн 50х50х3; Ст","techUnits":"м","accUnits":"кг","techToAcc":2.44,"weightTech":2.44}	E11000 duplicate key error collection: test_warehouse.itemnames index: name_1 dup key: { name: "кутн 50х50х3; ст" }
-data={"name":"кутн 50х50х4; Ст","techUnits":"м","accUnits":"кг","techToAcc":3.21,"weightTech":3.21}	E11000 duplicate key error collection: test_warehouse.itemnames index: name_1 dup key: { name: "кутн 50х50х4; ст" }
-data={"name":"кутн 50х50х5; Ст","techUnits":"м","accUnits":"кг","techToAcc":3.96,"weightTech":3.96}	E11000 duplicate key error collection: test_warehouse.itemnames index: name_1 dup key: { name: "кутн 50х50х5; ст" }
-data={"name":"кутн 50х50х6; Ст","techUnits":"м","accUnits":"кг","techToAcc":4.69,"weightTech":4.69}	E11000 duplicate key error collection: test_warehouse.itemnames index: name_1 dup key: { name: "кутн 50х50х6; ст" }
+Start : 2025-03-24T15:24:13.958Z

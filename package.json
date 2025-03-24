@@ -11,16 +11,16 @@
     "cookie-parser": "~1.4.3",
     "csv-parser": "^3.0.0",
     "debug": "~2.6.9",
-    "express": "~4.16.0",
+    "express": "^4.21.2",
     "http-errors": "~1.6.2",
     "mongoose": "^6.2.9",
     "morgan": "~1.9.0",
-    "pug": "2.0.0-beta11"
+    "pug": "^3.0.3"
   },
   "devDependencies": {
     "chai": "^4.3.6",
     "chai-http": "^4.3.0",
-    "mocha": "^9.2.2",
+    "mocha": "^11.1.0",
     "nodemon": "^2.0.15",
     "supertest": "^6.2.2"
   }

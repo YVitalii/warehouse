@@ -4,7 +4,7 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const mongoose = require("mongoose");
-let connStr = require("./config/db_config").testBaseConnectionString;
+let connStr = require("./config/db_config").connectionString;
 (async () => {
   try {
     await mongoose.connect(connStr);

@@ -16,6 +16,7 @@ const { Schema } = mongoose;
 const unitsList = ["м", "м2", "м3", "шт", "л", "кг"];
 const ItemSchema = new Schema({
   name: {
+    // назва матеріалу, всі букви в нижньому регістрі, щоб не було проблем з пошуком
     type: String,
     lowercase: true,
     unique: true,
@@ -41,29 +42,74 @@ const ItemSchema = new Schema({
     required: true,
     default: null,
   },
-  weightTech: {
+  weight: {
     // вага технічної одиниці в "кг", наприклад для "кутн 63х63" → 2,5 кг/м
     type: Number,
     required: true,
     default: null,
   },
-  qty: {
-    // нагальна кількість на складі в техн.одиницях
-    type: Number,
-    required: true,
-    default: 0,
-    min: 0,
+  quantity: {
+    instock: {
+      // кількість на складі в техн.одиницях
+      type: Number,
+      required: true,
+      default: 0,
+      min: 0,
+    },
+    reserved: {
+      // кількість зарезервовано в техн.одиницях
+      type: Number,
+      required: true,
+      default: 0,
+      min: 0,
+    },
+    reservList: {
+      // список id об'єктів що зарезервували матеріал
+      type: Array,
+      default: [],
+    },
+    minRest: {
+      // мінімальна кількість на складі в техн.одиницях
+      type: Number,
+      required: true,
+      default: 0,
+      min: 0,
+    },
   },
-  lastUpdated: {
-    //дата останнього коригування
-    type: Date,
-    default: Date.now(),
-  },
+
   price: {
-    type: Number,
-    default: 0,
-    min: 0,
+    // вартість за одиницю в бухгалтерських одиницях
+    value: { type: Number, default: 0, min: 0 }, // value
+    lastUpdated: {
+      // дата останнього оновлення ціни
+      type: Date,
+      default: Date.now(),
+    }, //  lastUpdated
+    currency: {
+      // валюта
+      type: String,
+      default: "USD",
+    }, //currency
+    story: {
+      // історія змін ціни
+      type: String,
+      default: "",
+    },
+  }, //price
+
+  note: {
+    // опис markdown or html
+    type: String,
+    default: "",
   },
+
+  storyPlace: {
+    // місце зберігання
+    type: String,
+    default: "",
+  },
+
+  properties: {}, // додаткові властивості
 }); //ItemShema
 
 ItemSchema.statics.getByName = function (name) {

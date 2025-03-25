@@ -19,7 +19,7 @@ let errLogFile = "./import_err.csv";
 
 // -- db -----
 let connStr = require("../../../config/db_config").testBaseConnectionString;
-const Item = require("../itemModel.js");
+const ItemModel = require("../itemModel.js");
 const mongoose = require("mongoose");
 let conn, errLogFH;
 
@@ -38,9 +38,9 @@ let conn, errLogFH;
 
   try {
     trace ? log("i", logN, "connStr", connStr) : null;
-    //conn = await mongoose.connect(connStr);
+    conn = await mongoose.connect(connStr);
     console.log("Connection established");
-    //errLogFH.write("Connection established \n");
+    errLogFH.write("Connection established \n");
   } catch (error) {
     log("err", "Connection not established");
     console.dir(error);
@@ -78,11 +78,11 @@ let conn, errLogFH;
       //data.weightTech = parseFloat(data.weightTech.replace(",", "."));
       //errLogFH.write(JSON.stringify(data) + "\n");
 
-      let item = new Item(data);
+      let item = new ItemModel(data);
       i++;
       try {
-        // await item.save();
-        trace ? console.dir(item) : null;
+        await item.save();
+        trace ? console.log(item.name + ":: Sucessfully saved!") : null;
       } catch (error) {
         let errMsg = "data=" + JSON.stringify(data) + "\t" + error.message;
         log("e", errMsg);
@@ -92,7 +92,7 @@ let conn, errLogFH;
     })
     .on("end", () => {
       log("w", "end event trigered");
-      //errLogFH.close();
+      errLogFH.close();
     });
   //
 })();

@@ -8,7 +8,7 @@ let gTrace = 0; //=1 глобальная трассировка (трассир
 // trace ? log("i",logN,"Started") : null;
 // trace ? log("i",logN,"--- ---") : null;
 // trace ? console.dir() : null;
-
+// let otherUnits = { мм: { k: 0.001, n: "м" }, км: { k: 1000, n: "м" } };
 // ------- file --------
 const fs = require("fs");
 const { open } = require("fs/promises");
@@ -18,9 +18,9 @@ let errLogFile = "./import_err.csv";
 //let separator = "\t";
 
 // -- db -----
-let connStr = require("../../../config/db_config").testBaseConnectionString;
+let connectToBase = require("../../../config/db_config").materials.connect;
 const ItemModel = require("../itemModel.js");
-const mongoose = require("mongoose");
+
 let conn, errLogFH;
 
 (async () => {
@@ -35,17 +35,17 @@ let conn, errLogFH;
   } catch (error) {
     log("err", "err=", error.message);
   }
-
-  try {
-    trace ? log("i", logN, "connStr", connStr) : null;
-    conn = await mongoose.connect(connStr);
-    console.log("Connection established");
-    errLogFH.write("Connection established \n");
-  } catch (error) {
-    log("err", "Connection not established");
-    console.dir(error);
-    handleError(error);
-  }
+  await connectToBase();
+  // try {
+  //   trace ? log("i", logN, "connStr", connStr) : null;
+  //   conn = await mongoose.connect(connStr);
+  //   console.log("Connection established");
+  //   errLogFH.write("Connection established \n");
+  // } catch (error) {
+  //   log("err", "Connection not established");
+  //   console.dir(error);
+  //   handleError(error);
+  // }
   let i = 0;
   fs.createReadStream(inputFileName)
     .pipe(
@@ -60,18 +60,26 @@ let conn, errLogFH;
       trace = i < 10;
       trace < 10 ? log("i", ln, "file=", data) : null;
       data.techToAcc = parseFloat(data.techToAcc.replace(",", "."));
-      data.price = parseFloat(data.price.replace(",", "."));
-      if (!data.price) {
-        data.price = 0;
+
+      if (!data.price || data.price == "") {
+        data.price = { value: 0 };
+      } else {
+        let value = parseFloat(data.price.replace(",", "."));
+        if (isNaN(value)) {
+          log("w", ln, `${data.name}:: price is not a number`, data.price);
+          value = 0;
+        }
+
+        data.price = { value };
       }
+
       if (data.techUnits == "кг") {
-        data.weightTech = parseFloat(data.techUnits.replace(",", "."));
+        data.weight = 1;
       } else {
         if (data.accUnits == "кг") {
-          data.weightTech =
-            parseFloat(data.techUnits.replace(",", ".")) * data.techToAcc;
+          data.weight = data.techToAcc;
         } else {
-          data.weightTech = 0;
+          data.weight = 0;
         }
       }
 

@@ -13,12 +13,62 @@ let gTrace = 0; //=1 глобальная трассировка (трассир
 
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
-const unitsList = ["м", "м2", "м3", "шт", "л", "кг"];
-const ItemSchema = new Schema({
+const unitsList = ["м", "м2", "м3", "шт", "л", "кг", "км"];
+
+const currenciesList = ["UAH", "USD", "EUR"];
+const PriceShema = new Schema(
+  {
+    // вартість за одиницю в бухгалтерських одиницях
+    value: { type: Number, default: 0 }, // value
+    lastUpdate: {
+      // дата останнього оновлення ціни
+      type: Date,
+      default: Date.now(),
+    }, //  lastUpdated
+    currency: {
+      // валюта
+      type: String,
+      default: "UAH",
+      enum: currenciesList,
+    }, //currency
+  },
+  { _id: false }
+); //PriceShema
+// --- схема додаткової властивості матеріалу ------
+// Наприклад для симістора ТС-122-16:  ключ Map:"I", name:"Струм", value: 160, units: "А", note:"Максимальний робочий струм"
+// Використовується як параметр для автоматичного розрахунку в сторонніх застосунках
+// Датчик тиску DH-PT300; 6bar;24VDC;4-20mA;G1/2”з,Darhor
+const PropertyShema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+    value: {
+      type: String,
+      required: true,
+    },
+    units: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    note: {
+      type: String,
+      default: "",
+    },
+  },
+  { _id: false }
+); //PropertyShema
+
+const MaterialSchema = new Schema({
   name: {
-    // назва матеріалу, всі букви в нижньому регістрі, щоб не було проблем з пошуком
+    // назва матеріалу,
     type: String,
-    lowercase: true,
+    minlength: 5,
+    maxlength: 60,
     unique: true,
     trim: true,
   },
@@ -48,53 +98,24 @@ const ItemSchema = new Schema({
     required: true,
     default: null,
   },
-  quantity: {
-    instock: {
-      // кількість на складі в техн.одиницях
-      type: Number,
-      required: true,
-      default: 0,
-      min: 0,
-    },
-    reserved: {
-      // кількість зарезервовано в техн.одиницях
-      type: Number,
-      required: true,
-      default: 0,
-      min: 0,
-    },
-    reservList: {
-      // список id об'єктів що зарезервували матеріал
-      type: Array,
-      default: [],
-    },
-    minRest: {
-      // мінімальна кількість на складі в техн.одиницях
-      type: Number,
-      required: true,
-      default: 0,
-      min: 0,
-    },
-  },
 
   price: {
-    // вартість за одиницю в бухгалтерських одиницях
-    value: { type: Number, default: 0, min: 0 }, // value
-    lastUpdated: {
-      // дата останнього оновлення ціни
-      type: Date,
-      default: Date.now(),
-    }, //  lastUpdated
-    currency: {
-      // валюта
-      type: String,
-      default: "USD",
-    }, //currency
-    story: {
-      // історія змін ціни
-      type: String,
-      default: "",
-    },
+    // вартість бухгалтерської одиниці
+    type: PriceShema,
+    required: true,
+    default: { value: 0, currency: "UAH" },
+    // set: function (v) { // на 2025-03-26 не працює
+    //   let trace = 1,
+    //     ln = "MaterialShema::" + `::${this._doc.name}::`;
+    //   if (trace) {
+    //     log("i", ln, `this=`);
+    //     console.dir(this);
+    //   }
+    //   if (this._doc.price && this._doc.price.lastUpdate) {
+    //     this.price.lastUpdate = new Date();
+    //   }
+    //   return v;
+    // },
   }, //price
 
   note: {
@@ -103,23 +124,21 @@ const ItemSchema = new Schema({
     default: "",
   },
 
-  storyPlace: {
-    // місце зберігання
-    type: String,
-    default: "",
-  },
+  properties: {
+    // додаткові властивості
+    type: Map,
+    of: PropertyShema,
+  }, // додаткові властивості
+}); //MaterialSchema
 
-  properties: {}, // додаткові властивості
-}); //ItemShema
-
-ItemSchema.statics.getByName = function (name) {
+MaterialSchema.statics.getByName = function (name) {
   return this.find({ name: new RegExp(name, "i") })
     .limit(10)
     .sort({ name: 1 })
     .select({ name: 1, _id: 1 });
 };
 
-ItemSchema.statics.getById = function (_id) {
+MaterialSchema.statics.getById = function (_id) {
   // ----------- настройки логгера локальные --------------
   let logN = logName + "byId('" + _id + "'):";
   let trace = 0;
@@ -133,7 +152,7 @@ ItemSchema.statics.getById = function (_id) {
 // console.log("-------->", reg);
 // let arr = str.match(reg);
 // console.dir(arr);
-let model = mongoose.model("ItemName", ItemSchema);
+let model = mongoose.model("Materials", MaterialSchema);
 module.exports = model;
 
 if (!module.parent) {

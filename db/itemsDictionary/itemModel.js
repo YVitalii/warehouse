@@ -119,15 +119,24 @@ const MaterialSchema = new Schema({
   }, //price
 
   note: {
-    // опис markdown or html
+    // короткий опис markdown or html
     type: String,
     default: "",
+  },
+
+  resources: {
+    // всі картинки, файли, документи, які стосуються матеріалу зберігаються в окремих файлах
+    // а в базі даних, зберігається масив з посиланнями на ці файли
+    // всі ресурси мають номер від 0 - 256 = номеру в масиві resources
+    type: [String],
+    default: [],
   },
 
   properties: {
     // додаткові властивості
     type: Map,
     of: PropertyShema,
+    default: {},
   }, // додаткові властивості
 }); //MaterialSchema
 

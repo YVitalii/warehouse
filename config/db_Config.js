@@ -14,21 +14,21 @@ if (devMode) {
     "mongodb+srv://api:_Bortek1994_@materials.b0rnw.mongodb.net/Materials?appName=Materials";
 }
 config.materials.maxGetItemsPerTime = 15;
-config.materials.connect = async function () {
-  let conn;
-  try {
-    conn = await mongoose.connect(config.materials.connectionString);
-    console.log(
-      ln +
-        "Connection established::connStr=" +
-        config.materials.connectionString
-    );
-  } catch (error) {
-    console.error(ln + "Connection not established");
-    console.dir(error);
-    throw error;
-  }
-  return conn;
-};
+// config.materials.connect = async function () {
+//   let conn;
+//   try {
+//     conn = await mongoose.connect(config.materials.connectionString);
+//     console.log(
+//       ln +
+//         "Connection established::connStr=" +
+//         config.materials.connectionString
+//     );
+//   } catch (error) {
+//     console.error(ln + "Connection not established");
+//     console.dir(error);
+//     throw error;
+//   }
+//   return conn;
+// };
 
 module.exports = config;

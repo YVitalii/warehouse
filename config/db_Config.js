@@ -1,19 +1,20 @@
-const mongoose = require("mongoose");
-
+const dbConnectionClass = require("../db/dbConnection/dbConnectionClass");
 let devMode = process.env.NODE_ENV !== "production";
 let ln = "db_Config::";
-const config = {
-  materials: {},
-};
+const props = {};
 
 if (devMode) {
-  config.materials.connectionString =
+  connectionString =
     "mongodb+srv://api:_Bortek1994_@materials.b0rnw.mongodb.net/testBase?appName=Materials";
 } else {
-  config.materials.connectionString =
+  connectionString =
     "mongodb+srv://api:_Bortek1994_@materials.b0rnw.mongodb.net/Materials?appName=Materials";
 }
-config.materials.maxGetItemsPerTime = 15;
+
+dataBase = new dbConnectionClass(connectionString, props);
+// dataBase.connect();
+module.exports = dataBase;
+
 // config.materials.connect = async function () {
 //   let conn;
 //   try {
@@ -30,5 +31,3 @@ config.materials.maxGetItemsPerTime = 15;
 //   }
 //   return conn;
 // };
-
-module.exports = config;

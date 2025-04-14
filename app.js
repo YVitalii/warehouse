@@ -3,19 +3,8 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-const mongoose = require("mongoose");
-let connStr = require("./config/db_config").connectionString;
-(async () => {
-  try {
-    await mongoose.connect(connStr);
-    console.log(
-      "Connection to base: '" + mongoose.connections[0].name + "' established"
-    );
-    //console.dir(mongoose.connections, { depth: 2 });
-  } catch (error) {
-    console.error(error.message);
-  }
-})();
+const datBase = require("./config/db_config").dataBase;
+// let connStr = require("./config/db_config").connectionString;
 
 var indexRouter = require("./routes/index");
 var itemRouter = require("./routes/items");

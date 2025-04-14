@@ -1,21 +1,22 @@
 const mongoose = require("mongoose");
 const log = require("../../tools/log.js");
 
-class DBConnectionClass {
-  constructor(props = {}) {
+class dbConnectionClass {
+  constructor(connectionString, props = {}) {
     this.ln = "DBConnectionClass::";
 
-    let trace = 0,
+    let trace = 1,
       ln = this.ln + `constructor::`;
     if (trace) {
       log("i", ln, `props=`);
-      console.dir(props);
+      console.dir(props, { depth: 2 });
     }
-    if (props.connectionString == "") {
+    if (!connectionString || connectionString == "") {
       throw new Error("Connection string is required");
     }
-    this.props = props;
-    this.db = mongoose.connection;
+
+    this.db = mongoose.createConnection(connectionString, this.props);
+
     this.db.on("error", (err) => {
       log("e", this.ln + "Connection error: " + err);
     });
@@ -38,26 +39,6 @@ class DBConnectionClass {
     }
   }
 
-  async connect() {
-    let trace = 1,
-      ln = this.ln + `connect()::`;
-    if (this.isConnected) {
-      log(ln + "Already connected to the database");
-      return true;
-    }
-    try {
-      this.db = await mongoose.connect(
-        this.props.connectionStrings,
-        this.props
-      );
-    } catch (error) {
-      log("e", ln + "Connection not established");
-      log("e", error);
-      throw error;
-    }
-    this.isConnected = true;
-  }
-
   disconnect() {
     // Logic to close the database connection
     this.db.close();
@@ -65,4 +46,4 @@ class DBConnectionClass {
   }
 }
 
-module.exports = DBConnectionClass;
+module.exports = dbConnectionClass;

@@ -22,7 +22,7 @@ const Item = mongoose.models.ItemName
   ? mongoose.models.ItemName
   : require("../itemModel.js"); //mongoose.models ? mongoose.models :
 
-let connStr = require("../../../config/db_config").testBaseConnectionString;
+let connStr = require("../../../config/db_config.js").testBaseConnectionString;
 console.log("\n\n-------------------------------------------------------");
 console.log(
   `-----     Start tests at:  ${new Date().toLocaleString()}    ----`
